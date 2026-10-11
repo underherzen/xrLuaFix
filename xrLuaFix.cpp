@@ -46,8 +46,11 @@ int luaopen_xrluafix(lua_State* L)
     // Original xrLuaFix for Shadow of Chernobyl
     luaL_dostring(L, "RvP = function() end");
 
-    // Anomaly compatibility
-    luaL_register(L, "lua_extensions", nullptr);
+    // Anomaly compatibility: an empty module table, created directly because
+    // PUC Lua 5.1 luaL_register does not accept a NULL function list
+    // (LuaJIT tolerates it and just creates the table).
+    lua_newtable(L);
+    lua_setglobal(L, "lua_extensions");
 
     open_string(L);
     open_table(L);
